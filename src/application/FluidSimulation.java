@@ -10,24 +10,16 @@ public class FluidSimulation {
 		return gfx.getPixelWriter();
 	}
 	
-	public static void addDensity(PixelWriter pw, int x, int y, Color c, int gridSizeX, int gridSizeY) {
+	public static void addDye(PixelWriter pw, int x, int y, Color c, int gridSizeX, int gridSizeY) {
 		
 		
-		for (int i = -5; i <= 5; i++) {
-			for (int j = -5; j <= 5; j++) {
-				if (i == 0 && j == 0) {
-					pw.setColor(x, y, Color.WHITE);
-					continue;
-				}
-
-				int checkX = x + i;
-				int checkY = y + j;
-
-				if (checkX >= 0 && checkX < gridSizeX && checkY >= 0 && checkY < gridSizeX)
-					pw.setColor(checkX, checkY, c);
+		for (int i = 0; i <= gridSizeX; i++) {
+			for (int j = 0; j <= gridSizeY; j++) {
+				
+					pw.setColor(x, y, c);
 
 			}
 		}
 	}
-
+	
 }

@@ -13,8 +13,10 @@ import javafx.stage.Stage;
 public class Main extends Application {
 
 	Point2D gridWorldSize = new Point2D(840d, 840d);
-	public int gridSizeX;
-	public int gridSizeY;
+	private int gridSizeX;
+	private int gridSizeY;
+	
+	private boolean simulating = true;
 	
 	@Override
 	public void start(Stage primaryStage) {
@@ -23,6 +25,8 @@ public class Main extends Application {
 		gridSizeY = (int) gridWorldSize.getY();
 
 		System.out.println(gridSizeX + gridSizeY);
+		
+		FluidPlane fluidplane = new FluidPlane(gridSizeX, gridSizeY, 1, 1, 1);
 		
 		Group root = new Group();
 		Canvas canvas = new Canvas(gridWorldSize.getX(), gridWorldSize.getY());
@@ -41,14 +45,14 @@ public class Main extends Application {
 				event -> {
 					if (event.getButton() == MouseButton.PRIMARY) {
 						event.consume();
-						FluidSimulation.addDensity(FluidSimulation.getPixelWriter(gfx), (int) event.getX(), (int) event.getY(), Color.BLACK, gridSizeX, gridSizeX);
+						FluidSimulation.addDye(FluidSimulation.getPixelWriter(gfx), (int) event.getX(), (int) event.getY(), Color.BLACK, gridSizeX, gridSizeX);
 					}
 				});
 		
 		canvas.setOnMouseDragged(
 				event -> {
 					event.consume();
-					FluidSimulation.addDensity(FluidSimulation.getPixelWriter(gfx), (int) event.getX(), (int) event.getY(), Color.BLACK, gridSizeX, gridSizeX);
+					FluidSimulation.addDye(FluidSimulation.getPixelWriter(gfx), (int) event.getX(), (int) event.getY(), Color.BLACK, gridSizeX, gridSizeX);
 				}
 				);
 
@@ -56,6 +60,10 @@ public class Main extends Application {
 
 		primaryStage.setScene(scene);
 		primaryStage.show();
+		
+		while (simulating) {
+			fluidplane.step();
+		}
 
 	}
 
