@@ -12,14 +12,14 @@ public class FluidSimulation {
 	
 	public static void addDye(PixelWriter pw, int x, int y, Color c, int gridSizeX, int gridSizeY) {
 		
-		
 		for (int i = 0; i <= gridSizeX; i++) {
 			for (int j = 0; j <= gridSizeY; j++) {
-				
+					
 					pw.setColor(x, y, c);
 
 			}
 		}
+		
 	}
 	
 }

@@ -1,5 +1,6 @@
 package application;
 
+import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.geometry.Point2D;
 import javafx.scene.Group;
@@ -12,12 +13,10 @@ import javafx.stage.Stage;
 
 public class Main extends Application {
 
-	Point2D gridWorldSize = new Point2D(840d, 840d);
+	Point2D gridWorldSize = new Point2D(600d, 600d);
 	private int gridSizeX;
 	private int gridSizeY;
-	
-	private boolean simulating = true;
-	
+
 	@Override
 	public void start(Stage primaryStage) {
 
@@ -25,82 +24,68 @@ public class Main extends Application {
 		gridSizeY = (int) gridWorldSize.getY();
 
 		System.out.println(gridSizeX + gridSizeY);
-		
-		FluidPlane fluidplane = new FluidPlane(gridSizeX, gridSizeY, 1, 1, 1);
-		
+
 		Group root = new Group();
 		Canvas canvas = new Canvas(gridWorldSize.getX(), gridWorldSize.getY());
 		GraphicsContext gfx = canvas.getGraphicsContext2D();
 		root.getChildren().add(canvas);
-		
-		root.setOnDragDetected(
-				event -> {
-					if (event.getButton() == MouseButton.PRIMARY) {
-					event.consume();
-					canvas.startFullDrag();
-					}
-				});
-		
-		canvas.setOnMouseClicked(
-				event -> {
-					if (event.getButton() == MouseButton.PRIMARY) {
-						event.consume();
-						FluidSimulation.addDye(FluidSimulation.getPixelWriter(gfx), (int) event.getX(), (int) event.getY(), Color.BLACK, gridSizeX, gridSizeX);
-					}
-				});
-		
-		canvas.setOnMouseDragged(
-				event -> {
-					event.consume();
-					FluidSimulation.addDye(FluidSimulation.getPixelWriter(gfx), (int) event.getX(), (int) event.getY(), Color.BLACK, gridSizeX, gridSizeX);
-				}
-				);
+
+		FluidPlane fluidplane = new FluidPlane(gridSizeX, gridSizeY, 0.1f, 0, 0, gfx);
+
+		root.setOnDragDetected(event -> {
+			if (event.getButton() == MouseButton.PRIMARY) {
+				event.consume();
+				canvas.startFullDrag();
+			}
+		});
+
+		canvas.setOnMouseClicked(event -> {
+			if (event.getButton() == MouseButton.PRIMARY) {
+				event.consume();
+				System.out.println("Doing smthn?");
+				fluidplane.addDensity((int) event.getX(), (int) event.getY(), 10);
+				fluidplane.addVelocity((int) event.getX(), (int) event.getY(), 100, 100);
+				// FluidSimulation.addDye(FluidSimulation.getPixelWriter(gfx), (int)
+				// event.getX(), (int) event.getY(), Color.BLACK, gridSizeX, gridSizeX);
+			}
+		});
+
+		canvas.setOnMouseDragged(event -> {
+			event.consume();
+			// FluidSimulation.addDye(FluidSimulation.getPixelWriter(gfx), (int)
+			// event.getX(), (int) event.getY(), Color.BLACK, gridSizeX, gridSizeX);
+		});
 
 		Scene scene = new Scene(root, Color.DARKSLATEGRAY);
 
 		primaryStage.setScene(scene);
 		primaryStage.show();
-		
-		while (simulating) {
-			fluidplane.step();
-		}
+
+		AnimationTimer updateCanvas = new Draw(fluidplane);
+		updateCanvas.start();
 
 	}
-
-	/*private void addDensity(Particle node) {
-
-		for (int i = -1; i <= 1; i++) {
-			for (int j = -1; j <= 1; j++) {
-				if (i == 0 && j == 0) {
-					node.setStyle(getStyle(Color.WHITE));
-					continue;
-				}
-
-				int checkX = node.gridX + i;
-				int checkY = node.gridY + j;
-
-				if (checkX >= 0 && checkX < gridSizeX && checkY >= 0 && checkY < gridSizeX)
-					gridArray[checkX][checkY].setStyle(getStyle(Color.PINK));
-
-			}
-		}
-
-	}*/
-
-	/*private String getStyle(Color color) {
-
-		String colorString = color.toString();
-		colorString = colorString.replace("0x", "#");
-		String style = "-fx-background-color: " + colorString + "; -fx-border-style: solid; -fx-border-width: 1;"
-				+ " -fx-border-color: black; -fx-min-width: " + (nodeRadius * 2) + "; -fx-min-height:"
-				+ (nodeRadius * 2) + "; -fx-max-width:" + (nodeRadius * 2) + ";" + " -fx-max-height: "
-				+ (nodeRadius * 2) + ";";
-
-		return style;
-	}*/
 
 	public static void main(String[] args) {
 
 		launch(args);
+	}
+	
+	private class Draw extends AnimationTimer {
+		
+		FluidPlane plane;
+		
+		public Draw(FluidPlane plane) {
+			this.plane = plane;
+		}
+
+		@Override
+		public void handle(long arg0) {
+			
+			plane.step();
+			plane.renderD();
+			
+		}
+		
 	}
 }
