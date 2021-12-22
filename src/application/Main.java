@@ -1,5 +1,7 @@
 package application;
 
+import java.util.Random;
+
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.geometry.Point2D;
@@ -13,11 +15,11 @@ import javafx.stage.Stage;
 
 public class Main extends Application {
 
-	Point2D gridWorldSize = new Point2D(300d, 300d);
+	Point2D gridWorldSize = new Point2D(400d, 400d);
 	private int gridSizeX;
 	private int gridSizeY;
 	
-	public int SCALE = 10;
+	private int SCALE = 10;
 
 	@Override
 	public void start(Stage primaryStage) {
@@ -32,7 +34,7 @@ public class Main extends Application {
 		GraphicsContext gfx = canvas.getGraphicsContext2D();
 		root.getChildren().add(canvas);
 
-		FluidPlane fluidplane = new FluidPlane(gridSizeX, gridSizeY, 10f, 0, 0, gfx);
+		FluidPlane fluidplane = new FluidPlane(gridSizeX, gridSizeY, 0.2f, 0.0001f, 1f, gfx, SCALE);
 
 		root.setOnDragDetected(event -> {
 			if (event.getButton() == MouseButton.PRIMARY) {
@@ -44,19 +46,19 @@ public class Main extends Application {
 		canvas.setOnMouseClicked(event -> {
 			if (event.getButton() == MouseButton.PRIMARY) {
 				event.consume();
-				System.out.println("Doing smthn?");
-				fluidplane.addDensity((int) event.getX(), (int) event.getY(), 10);
-				fluidplane.addVelocity((int) event.getX(), (int) event.getY(), 100, 100);
+				fluidplane.addDensity((int) event.getX(), (int) event.getY(), randInRange(0, 100));
+				fluidplane.addVelocity((int) event.getX(), (int) event.getY(), randInRange(1, 100), randInRange(1, 100));
 				
 			}
 		});
 
 		canvas.setOnMouseDragged(event -> {
 			event.consume();
-			
+			fluidplane.addDensity((int) event.getX(), (int) event.getY(), randInRange(0, 100));
+			fluidplane.addVelocity((int) event.getX(), (int) event.getY(), randInRange(1, 100), randInRange(1, 100));
 		});
 
-		Scene scene = new Scene(root, Color.DARKSLATEGRAY);
+		Scene scene = new Scene(root, Color.BLACK);
 
 		primaryStage.setScene(scene);
 		primaryStage.show();
@@ -64,6 +66,10 @@ public class Main extends Application {
 		AnimationTimer updateCanvas = new Draw(fluidplane);
 		updateCanvas.start();
 
+	}
+	
+	private int randInRange(int min, int max) {
+		return new Random().nextInt(max - min + 1) + min;
 	}
 
 	public static void main(String[] args) {

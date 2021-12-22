@@ -7,7 +7,10 @@ public class FluidPlane {
 
 	private int N;
 	private int gridSizeX;
+	@SuppressWarnings("unused")
 	private int gridSizeY;
+	
+	private int SCALE;
 
 	private float dt;
 	private float diff;
@@ -24,9 +27,11 @@ public class FluidPlane {
 
 	private GraphicsContext gfx;
 
-	public FluidPlane(int gridSizeX, int gridSizeY, float dt, float diff, float visc, GraphicsContext gfx) {
+	public FluidPlane(int gridSizeX, int gridSizeY, float dt, float diff, float visc, GraphicsContext gfx, int scale) {
 
 		this.gfx = gfx;
+		
+		this.SCALE = scale;
 
 		this.gridSizeX = gridSizeX;
 		this.gridSizeY = gridSizeY;
@@ -34,7 +39,7 @@ public class FluidPlane {
 			System.out.println("Grid sizes must be equal");
 			return;
 		}
-		;
+		
 		N = gridSizeX;
 
 		this.dt = dt;
@@ -70,8 +75,8 @@ public class FluidPlane {
 		int index = IX(x, y);
 		this.densityN[index] += amount;
 		
-		System.out.println(this.densityN[index]);
-		System.out.println(this.densityN[IX(x+1, y)]);
+//		System.out.println(this.densityN[index]);
+//		System.out.println(this.densityN[IX(x+1, y)]);
 
 
 	}
@@ -256,7 +261,7 @@ public class FluidPlane {
 	 */
 
 	public void step() {
-
+		
 		diffuse(1, velocityXP, velocityX, visc, dt, 4);
 		diffuse(2, velocityYP, velocityY, visc, dt, 4);
 
@@ -275,12 +280,29 @@ public class FluidPlane {
 
 		for (int i = 0; i < N; i++) {
 			for (int j = 0; j < N; j++) {
-				
-				double density = this.densityN[IX(i, j)];
+		        
+		        double density = this.densityN[IX(i, j)];
+		        density = clamp(density, 0, 1000);
+		        
+		        float opacity = 0;
+		        
+		        if (density <= 1000d) opacity = 0.7f;
+		        if (density <= 950d) opacity = 0.68f;
+		        if (density <= 900d) opacity = 0.65f;
+		        if (density <= 800d) opacity = 0.6f;
+		        if (density <= 700d) opacity = 0.5f;
+		        if (density <= 600d) opacity = 0.4f;
+		        if (density <= 500d) opacity = 0.3f;
+		        if (density <= 400d) opacity = 0.2f;
+		        if (density <= 300d) opacity = 0.15f;
+		        if (density <= 200d) opacity = 0.1f;
+		        if (density <= 100d) opacity = 0.05f;
 				
 				if (density > 0) {
-					Color alpha = new Color(1, 1, 1, 1.0);
-					gfx.getPixelWriter().setColor(i, j, alpha);;
+					Color alpha = new Color(1, 1, 1, opacity);
+//					gfx.getPixelWriter().setColor(i, j, alpha);
+					gfx.setFill(alpha);
+					gfx.fillRect(i, j, SCALE, SCALE);
 
 				}
 				
@@ -288,6 +310,10 @@ public class FluidPlane {
 			}
 		}
 
+	}
+	
+	private static double clamp(double val, double min, double max) {
+	    return Math.max(min, Math.min(max, val));
 	}
 
 }
