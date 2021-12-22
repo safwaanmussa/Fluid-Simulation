@@ -13,7 +13,7 @@ import javafx.stage.Stage;
 
 public class Main extends Application {
 
-	Point2D gridWorldSize = new Point2D(600d, 600d);
+	Point2D gridWorldSize = new Point2D(300d, 300d);
 	private int gridSizeX;
 	private int gridSizeY;
 
@@ -30,7 +30,7 @@ public class Main extends Application {
 		GraphicsContext gfx = canvas.getGraphicsContext2D();
 		root.getChildren().add(canvas);
 
-		FluidPlane fluidplane = new FluidPlane(gridSizeX, gridSizeY, 0.1f, 0, 0, gfx);
+		FluidPlane fluidplane = new FluidPlane(gridSizeX, gridSizeY, 10f, 0, 0, gfx);
 
 		root.setOnDragDetected(event -> {
 			if (event.getButton() == MouseButton.PRIMARY) {

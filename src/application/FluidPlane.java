@@ -110,8 +110,12 @@ public class FluidPlane {
 
 		for (int j = 1; j < N - 1; j++) {
 			for (int i = 1; i < N - 1; i++) {
-				div[IX(i, j)] = -0.5f
-						* (velocX[IX(i + 1, j)] - velocX[IX(i - 1, j)] + velocY[IX(i, j + 1)] - velocY[IX(i, j - 1)])
+				div[IX(i, j)] =
+						(-0.5f * 
+							(velocX[IX(i + 1, j)] -
+							 velocX[IX(i - 1, j)] +
+							 velocY[IX(i, j + 1)] - 
+							 velocY[IX(i, j - 1)]))
 						/ N;
 				p[IX(i, j)] = 0;
 			}
@@ -120,7 +124,6 @@ public class FluidPlane {
 
 		set_bnd(0, div);
 		set_bnd(0, p);
-
 		lin_solve(0, p, div, 1, 6, iter);
 
 		for (int j = 1; j < N - 1; j++) {
@@ -135,6 +138,7 @@ public class FluidPlane {
 	}
 
 	void advect(int b, float[] d, float[] d0, float[] velocX, float[] velocY, float dt) {
+		
 		float i0, i1, j0, j1;
 
 		float dtx = dt * (N - 2);
@@ -143,7 +147,7 @@ public class FluidPlane {
 		float s0, s1, t0, t1;
 		float tmp1, tmp2, x, y;
 
-		float Nfloat = N;
+		float Nfloat = N - 2;
 		float ifloat, jfloat;
 		int i, j;
 
@@ -183,9 +187,12 @@ public class FluidPlane {
 				int i1i = Math.round(i1);
 				int j0i = Math.round(j0);
 				int j1i = Math.round(j1);
-
-				d[IX(i, j)] = s0 * (t0 * d0[IX(i0i, j0i)]) + (t1 * d0[IX(i0i, j1i)]) + s1 * (t0 * d0[IX(i1i, j0i)])
-						+ (t1 * d0[IX(i1i, j1i)]);
+				
+//				System.out.println(i + " " + j + " " + IX(i,j));
+				
+				d[IX(i, j)] = 
+						s0 * (t0 * d0[IX(i0i, j0i)]) + (t1 * d0[IX(i0i, j1i)]) + 
+						s1 * (t0 * d0[IX(i1i, j0i)]) + (t1 * d0[IX(i1i, j1i)]);
 
 			}
 
