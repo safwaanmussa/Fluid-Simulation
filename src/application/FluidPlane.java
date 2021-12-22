@@ -54,24 +54,24 @@ public class FluidPlane {
 
 	public void resetPlane() {
 
-		this.setDensityP(new float[N]);
-		this.setDensityN(new float[N]);
+		this.densityP = new float[N];
+		this.densityN = new float[N];
 
-		this.setVelocityXP(new float[gridSizeX]);
-		this.setVelocityYP(new float[gridSizeX]);
+		this.velocityXP = new float[gridSizeX];
+		this.velocityYP = new float[gridSizeX];
 
-		this.setVelocityX(new float[gridSizeX]);
-		this.setVelocityY(new float[gridSizeX]);
+		this.velocityX = new float[gridSizeX];
+		this.velocityY = new float[gridSizeX];
 
 	}
 
 	public void addDensity(int x, int y, float amount) {
 
 		int index = IX(x, y);
-		this.getDensityN()[index] += amount;
+		this.densityN[index] += amount;
 		
-		System.out.println(this.getDensityN()[index]);
-		System.out.println(this.getDensityN()[IX(x+1, y)]);
+		System.out.println(this.densityN[index]);
+		System.out.println(this.densityN[IX(x+1, y)]);
 
 
 	}
@@ -79,8 +79,8 @@ public class FluidPlane {
 	public void addVelocity(int x, int y, float amountX, float amountY) {
 
 		int index = IX(x, y);
-		this.getVelocityX()[index] += amountX;
-		this.getVelocityY()[index] += amountY;
+		this.velocityX[index] += amountX;
+		this.velocityY[index] += amountY;
 
 	}
 
@@ -224,97 +224,7 @@ public class FluidPlane {
 
 	/* GETTERS AND SETTERS */
 
-	public int getN() {
-		return N;
-	}
-
-	public int getGridSizeX() {
-		return gridSizeX;
-	}
-
-	public void setGridSizeX(int gridSizeX) {
-		this.gridSizeX = gridSizeX;
-	}
-
-	public int getGridSizeY() {
-		return gridSizeY;
-	}
-
-	public void setGridSizeY(int gridSizeY) {
-		this.gridSizeY = gridSizeY;
-	}
-
-	public float getDt() {
-		return dt;
-	}
-
-	public void setDt(float dt) {
-		this.dt = dt;
-	}
-
-	public float getDiff() {
-		return diff;
-	}
-
-	public void setDiff(float diff) {
-		this.diff = diff;
-	}
-
-	public float getVisc() {
-		return visc;
-	}
-
-	public float[] getDensityP() {
-		return densityP;
-	}
-
-	public void setDensityP(float[] densityP) {
-		this.densityP = densityP;
-	}
-
-	public float[] getDensityN() {
-		return densityN;
-	}
-
-	public void setDensityN(float[] densityN) {
-		this.densityN = densityN;
-	}
-
-	public float[] getVelocityX() {
-		return velocityX;
-	}
-
-	public void setVelocityX(float[] velocityX) {
-		this.velocityX = velocityX;
-	}
-
-	public float[] getVelocityY() {
-		return velocityY;
-	}
-
-	public void setVelocityY(float[] velocityY) {
-		this.velocityY = velocityY;
-	}
-
-	public float[] getVelocityXP() {
-		return velocityXP;
-	}
-
-	public void setVelocityXP(float[] velocityXP) {
-		this.velocityXP = velocityXP;
-	}
-
-	public float[] getVelocityYP() {
-		return velocityYP;
-	}
-
-	public void setVelocityYP(float[] velocityYP) {
-		this.velocityYP = velocityYP;
-	}
-
-	public void setVisc(float visc) {
-		this.visc = visc;
-	}
+	
 
 	private int IX(int x, int y) {
 		return x + y * N;

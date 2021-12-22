@@ -16,6 +16,8 @@ public class Main extends Application {
 	Point2D gridWorldSize = new Point2D(300d, 300d);
 	private int gridSizeX;
 	private int gridSizeY;
+	
+	public int SCALE = 10;
 
 	@Override
 	public void start(Stage primaryStage) {
@@ -45,15 +47,13 @@ public class Main extends Application {
 				System.out.println("Doing smthn?");
 				fluidplane.addDensity((int) event.getX(), (int) event.getY(), 10);
 				fluidplane.addVelocity((int) event.getX(), (int) event.getY(), 100, 100);
-				// FluidSimulation.addDye(FluidSimulation.getPixelWriter(gfx), (int)
-				// event.getX(), (int) event.getY(), Color.BLACK, gridSizeX, gridSizeX);
+				
 			}
 		});
 
 		canvas.setOnMouseDragged(event -> {
 			event.consume();
-			// FluidSimulation.addDye(FluidSimulation.getPixelWriter(gfx), (int)
-			// event.getX(), (int) event.getY(), Color.BLACK, gridSizeX, gridSizeX);
+			
 		});
 
 		Scene scene = new Scene(root, Color.DARKSLATEGRAY);
